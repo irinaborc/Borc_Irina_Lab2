@@ -17,7 +17,7 @@ using System.Windows.Shapes;
 namespace Borc_Irina_Lab2
 {
     
-    /// Interaction logic for MainWindow.xaml
+    /// Interaction logic  MainWindow.xaml
     /// </summary>
     public partial class MainWindow : Window
     {
