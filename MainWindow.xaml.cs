@@ -32,7 +32,11 @@ namespace Borc_Irina_Lab2
         private void frmMain_Loaded(object sender, RoutedEventArgs e)
         {
             myDoughnutMachine = new DoughnutMachine();
-            myDoughnutMachine.DoughnutComplete += new  DoughnutMachine.DoughnutCompleteDelegate(DoughnutCompleteHandler);
+            myDoughnutMachine.DoughnutComplete += new
+           DoughnutMachine.DoughnutCompleteDelegate(DoughnutCompleteHandler);
+            cmbType.ItemsSource = PriceList;
+            cmbType.DisplayMemberPath = "Key";
+            cmbType.SelectedValuePath = "Value";
         }
 
 
@@ -41,29 +45,9 @@ namespace Borc_Irina_Lab2
         private int mFilledLemon;
         private int mFilledChocolate;
         private int mFilledVanilla;
-      
-      
-        private void lemonToolStripMenuItem_Click(object sender, RoutedEventArgs e)
-        {
-            lemonToolStripMenuItem.IsChecked = true;
-            chocolateToolStripMenuItem.IsChecked = false;
-            vanillaToolStripMenuItem.IsChecked = false;
-            myDoughnutMachine.MakeDoughnuts(DoughnutType.Lemon);
-        }
-        private void chocolateToolStripMenuItem_Click(object sender, RoutedEventArgs e)
-        {
-            lemonToolStripMenuItem.IsChecked = false;
-            chocolateToolStripMenuItem.IsChecked = true;
-            vanillaToolStripMenuItem.IsChecked = false;
-           myDoughnutMachine.MakeDoughnuts(DoughnutType.Chocolate);
-        }
-        private void vanillaToolStripMenuItem_Click(object sender, RoutedEventArgs e)
-        {
-            lemonToolStripMenuItem.IsChecked = false;
-           chocolateToolStripMenuItem.IsChecked = false;
-            vanillaToolStripMenuItem.IsChecked = true;
-          myDoughnutMachine.MakeDoughnuts(DoughnutType.Vanilla);
-        }
+
+
+
         private void DoughnutCompleteHandler()
         {
             switch (myDoughnutMachine.Flavor)
@@ -114,13 +98,131 @@ namespace Borc_Irina_Lab2
             sugarToolStripMenuItem.IsChecked = false;
             myDoughnutMachine.MakeDoughnuts(DoughnutType.Glazed);
         }
-
-        private void sugarToolStripMenu_Click(object sender, RoutedEventArgs e)
+        private void sugarToolStripMenuItem_Click(object sender, RoutedEventArgs e)
         {
             glazedToolStripMenuItem.IsChecked = false;
             sugarToolStripMenuItem.IsChecked = true;
             myDoughnutMachine.MakeDoughnuts(DoughnutType.Sugar);
+        }
 
+        private void FilledItems_Click(object sender, RoutedEventArgs e)
+        {
+            string DoughnutFlavour;
+            MenuItem SelectedItem = (MenuItem)e.OriginalSource;
+            DoughnutFlavour = SelectedItem.Header.ToString();
+            Enum.TryParse(DoughnutFlavour, out DoughnutType myFlavour);
+            myDoughnutMachine.MakeDoughnuts(myFlavour);
+
+        }
+        private void FilledItemsShow_Click(object sender, RoutedEventArgs e)
+        {
+            string mesaj;
+            MenuItem SelectedItem = (MenuItem)e.OriginalSource;
+            mesaj = SelectedItem.Header.ToString() + " doughnuts are being cooked!";
+            this.Title = mesaj;
+        }
+        KeyValuePair<DoughnutType, double>[] PriceList = {
+ new KeyValuePair<DoughnutType, double>(DoughnutType.Sugar, 2.5),
+ new KeyValuePair<DoughnutType, double>(DoughnutType.Glazed,3),
+ new KeyValuePair<DoughnutType, double>(DoughnutType.Chocolate,4.5),
+ new KeyValuePair<DoughnutType, double>(DoughnutType.Vanilla,4),
+ new KeyValuePair<DoughnutType, double>(DoughnutType.Lemon,3.5)
+ };
+        DoughnutType selectedDoughnut;
+
+        private void cmbType_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            txtPrice.Text = cmbType.SelectedValue.ToString();
+            KeyValuePair<DoughnutType, double> selectedEntry =
+           (KeyValuePair<DoughnutType, double>)cmbType.SelectedItem;
+            selectedDoughnut = selectedEntry.Key;
+        }
+        private int ValidateQuantity(DoughnutType selectedDoughnut)
+        {
+            int q = int.Parse(txtQuantity.Text);
+            int r = 1;
+
+            switch (selectedDoughnut)
+            {
+                case DoughnutType.Glazed:
+                    if (q > mRaisedGlazed)
+                        r = 0;
+                    break;
+                case DoughnutType.Sugar:
+                    if (q > mRaisedSugar)
+                        r = 0;
+                    break;
+                case DoughnutType.Chocolate:
+                    if (q > mFilledChocolate)
+                        r = 0;
+                    break;
+                case DoughnutType.Lemon:
+                    if (q > mFilledLemon)
+                        r = 0;
+                    break;
+                case DoughnutType.Vanilla:
+                    if (q > mFilledVanilla)
+                        r = 0;
+                    break;
+            }
+            return r;
+        }
+
+        private void btnAdd_Click(object sender, RoutedEventArgs e)
+        {
+            if (ValidateQuantity(selectedDoughnut) > 0)
+            {
+                lstSale.Items.Add(txtQuantity.Text + " " + selectedDoughnut.ToString() +
+               ":" + txtPrice.Text + " " + double.Parse(txtQuantity.Text) *
+               double.Parse(txtPrice.Text));
+            }
+            else
+            {
+                MessageBox.Show("Cantitatea introdusa nu este disponibila in stoc!");
+            }
+        }
+
+        private void btnRemoveItem_Click(object sender, RoutedEventArgs e)
+        {
+            lstSale.Items.Remove(lstSale.SelectedItem);
+        }
+
+        private void btnCheckOut_Click(object sender, RoutedEventArgs e)
+        {
+            txtTotal.Text = (double.Parse(txtTotal.Text) + double.Parse(txtQuantity.Text)
+           * double.Parse(txtPrice.Text)).ToString();
+            foreach (string s in lstSale.Items)
+            {
+                switch (s.Substring(s.IndexOf(" ") + 1, s.IndexOf(":") - s.IndexOf(" ") -
+               1))
+                {
+                    case "Glazed":
+                        mRaisedGlazed = mRaisedGlazed - Int32.Parse(s.Substring(0,
+                       s.IndexOf(" ")));
+                        txtGlazedRaised.Text = mRaisedGlazed.ToString();
+                        break;
+                    case "Sugar":
+                        mRaisedSugar = mRaisedSugar - Int32.Parse(s.Substring(0,
+                       s.IndexOf(" ")));
+                        txtSugarRaised.Text = mRaisedSugar.ToString();
+                        break;
+                    case "Chocolate":
+                        mFilledChocolate = mFilledChocolate - Int32.Parse(s.Substring(0,
+                       s.IndexOf(" ")));
+                        txtChocolateFilled.Text = mFilledChocolate.ToString();
+                        break;
+                    case "Lemon":
+                        mFilledLemon = mFilledLemon - Int32.Parse(s.Substring(0,
+                       s.IndexOf(" ")));
+                        txtLemonFilled.Text = mFilledLemon.ToString();
+                        break;
+                    case "Vanilla":
+                        mFilledVanilla = mFilledVanilla - Int32.Parse(s.Substring(0,
+                       s.IndexOf(" ")));
+                        txtVanillaFilled.Text = mFilledVanilla.ToString();
+                        break;
+                }
+            }
         }
     }
 }

@@ -6,8 +6,8 @@
         xmlns:local="clr-namespace:Borc_Irina_Lab2"
         mc:Ignorable="d"
         Title="Virtual Doughnuts Factory" Height="484" Width="822" ResizeMode="NoResize" Background="{DynamicResource {x:Static SystemColors.ActiveCaptionBrushKey}}">
-    <Grid x:Name="frmMain" AutomationProperties.Name="" Margin="0,0,0,17"
-          >
+    <Grid x:Name="frmMain" AutomationProperties.Name="" Margin="0,0,0,17" MenuItem.Click="FilledItemsShow_Click">
+          
         <Label x:Name="lblTitle" Content="Doughnuts - Bake &amp; Sale" HorizontalAlignment="Left" Margin="258,10,0,0" VerticalAlignment="Top" FontSize="24" FontWeight="Bold"/>
         <GroupBox x:Name="gbRaised" Header="Raised" Margin="107,83,444,186" FontWeight="Bold">
             <Canvas>
@@ -34,12 +34,12 @@
                 <Label x:Name="lblPrice" Content="Price" Canvas.Left="350" Canvas.Top="12"/>
                 <TextBox x:Name="txtQuantity" TextWrapping="Wrap" Width="78" Canvas.Left="74" Canvas.Top="14" Height="22" Text="0"/>
                 <TextBox x:Name="txtPrice" Canvas.Left="388" Canvas.Top="16" TextWrapping="Wrap" Width="86" Height="20" Text="0" IsReadOnly="True"/>
-                <ComboBox x:Name="cmbType" Canvas.Left="216" Canvas.Top="14" Width="120"/>
+                <ComboBox x:Name="cmbType"  Canvas.Left="216" Canvas.Top="14" Width="120" SelectionChanged="cmbType_SelectionChanged"/>
                 <ListBox x:Name="lstSale" Height="57" Width="454" Canvas.Top="43" Canvas.Left="20"/>
                 <Label x:Name="lblTotal" Content="Total" Canvas.Left="296" Canvas.Top="107"/>
                 <TextBox x:Name="txtTotal" Canvas.Left="339" Canvas.Top="107" Text="0" TextWrapping="Wrap" Width="135" Height="22" IsReadOnly="True"/>
-                <Button x:Name="btnAddToSale" Content="Add To Sale" Canvas.Left="498" Canvas.Top="43" Width="73" FontWeight="Normal"/>
-                <Button x:Name="btnRemoveItem" Content="Remove Item" Canvas.Left="498" Canvas.Top="68" Width="73" FontWeight="Normal"/>
+                <Button x:Name="btnAddToSale" Content="Add To Sale" Canvas.Left="498" Canvas.Top="43" Width="73" FontWeight="Normal" Click="btnAdd_Click" />
+                <Button x:Name="btnRemoveItem" Content="Remove Item" Canvas.Left="498" Canvas.Top="68" Width="73" FontWeight="Normal" Click="btnRemoveItem_Click"/>
                 <Button x:Name="btnCheckOut" Content="Check Out" Canvas.Left="498" Canvas.Top="107" Height="22" Width="73"/>
             </Canvas>
         </GroupBox>
@@ -58,21 +58,20 @@ Width="131" Margin="0,26,0,0">
 
 
                         <MenuItem x:Name="sugarToolStripMenuItem" Header="Sugar"
-IsCheckable="True" Click="sugarToolStripMenu_Click" />
+IsCheckable="True" Click="sugarToolStripMenuItem_Click" />
                     </MenuItem>
 
-                    <MenuItem Header="Filled" >
+                    <MenuItem Header="Filled" Click="FilledItems_Click" >
                         <MenuItem x:Name="lemonToolStripMenuItem" Header="Lemon" 
-  IsCheckable="True" Click="lemonToolStripMenuItem_Click" />
+  IsCheckable="True"  />
                         <MenuItem x:Name="chocolateToolStripMenuItem" Header="Chocolate"
-  IsCheckable="True" Click="chocolateToolStripMenuItem_Click"/>
+  IsCheckable="True" />
                         <MenuItem x:Name="vanillaToolStripMenuItem" Header="Vanilla"
-  IsCheckable="True" Click="vanillaToolStripMenuItem_Click"/>
+  IsCheckable="True" />
                     </MenuItem>
                     <MenuItem x:Name="mnuStop" Header="Stop" Click="stopToolStripMenuItem_Click" />
                 </MenuItem>
             </MenuItem>
         </Menu>
-        <Menu Margin="0,57,667,368"/>
     </Grid>
 </Window>

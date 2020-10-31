@@ -8,6 +8,7 @@ namespace Borc_Irina_Lab2
 {
     class DoughnutMachine : Component
     {
+
         private System.Collections.ArrayList mDoughnuts = new System.Collections.ArrayList();
         public Doughnut this[int Index]
         {
@@ -116,7 +117,6 @@ namespace Borc_Irina_Lab2
                 mFlavor = value;
             }
         }
-
         private float mPrice = .50F;
         public float Price
         {
